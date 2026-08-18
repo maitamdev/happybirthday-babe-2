@@ -18,6 +18,9 @@ function applyTheme(mode) {
   root.style.setProperty("--bg", theme.background || "#1a1a2e");
   root.style.setProperty("--text", theme.text || "#ffffff");
 
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) themeColor.setAttribute("content", theme.background || "#1a1a2e");
+
   // Update toggle icon
   const btn = document.getElementById("theme-toggle");
   if (btn) btn.textContent = mode === "dark" ? "☀️" : "🌙";
@@ -26,12 +29,102 @@ function applyTheme(mode) {
 function createThemeToggle() {
   const btn = document.createElement("button");
   btn.id = "theme-toggle";
-  btn.title = "Toggle dark/light mode";
+  btn.title = "Đổi nền sáng hoặc tối";
   btn.textContent = currentMode === "dark" ? "☀️" : "🌙";
   btn.addEventListener("click", () => {
     applyTheme(currentMode === "dark" ? "light" : "dark");
   });
   document.body.appendChild(btn);
+}
+
+function createWelcomeScreen(onStart) {
+  const screen = document.createElement("div");
+  screen.id = "welcome-screen";
+  screen.innerHTML = `
+    <div class="welcome-card">
+      <p class="welcome-kicker">Một món quà nhỏ của anhiu</p>
+      <h2>Gửi emmmbe iu ❤️</h2>
+      <p class="welcome-copy">Nhấn vào đây để bắt đầu món quà sinh nhật của em nhé.</p>
+      <div class="welcome-actions">
+        <button type="button" class="welcome-btn welcome-btn-primary" id="start-with-music">
+          Bắt đầu cùng nhạc 🎵
+        </button>
+        <button type="button" class="welcome-btn welcome-btn-quiet" id="start-silent">
+          Bắt đầu không nhạc
+        </button>
+      </div>
+    </div>
+  `;
+
+  const start = (withMusic) => {
+    screen.remove();
+    onStart(withMusic);
+  };
+
+  screen.querySelector("#start-with-music").addEventListener("click", () => start(true));
+  screen.querySelector("#start-silent").addEventListener("click", () => start(false));
+  document.body.appendChild(screen);
+}
+
+function createPlaybackControls(tl) {
+  const controls = document.createElement("div");
+  controls.id = "playback-controls";
+  controls.innerHTML = `
+    <button type="button" class="timeline-control" id="timeline-toggle" aria-label="Tạm dừng hoặc tiếp tục">
+      Tạm dừng
+    </button>
+    <div class="timeline-progress" role="progressbar" aria-label="Tiến trình lời chúc" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <span class="timeline-progress-fill"></span>
+    </div>
+    <button type="button" class="timeline-control timeline-replay" id="timeline-replay" aria-label="Xem lại từ đầu">
+      ↻
+    </button>
+  `;
+  document.body.appendChild(controls);
+
+  const toggle = controls.querySelector("#timeline-toggle");
+  const replay = controls.querySelector("#timeline-replay");
+  const progress = controls.querySelector(".timeline-progress");
+  const fill = controls.querySelector(".timeline-progress-fill");
+
+  const setPlayingLabel = (isPlaying) => {
+    toggle.textContent = isPlaying ? "Tạm dừng" : "Tiếp tục";
+  };
+
+  const restart = () => {
+    tl.restart();
+    setPlayingLabel(true);
+  };
+
+  toggle.addEventListener("click", () => {
+    if (tl.progress() >= 0.999) {
+      restart();
+      return;
+    }
+
+    if (tl.paused()) {
+      tl.resume();
+      setPlayingLabel(true);
+    } else {
+      tl.pause();
+      setPlayingLabel(false);
+    }
+  });
+
+  replay.addEventListener("click", restart);
+
+  tl.eventCallback("onUpdate", () => {
+    const percent = Math.round(tl.progress() * 100);
+    fill.style.transform = `scaleX(${percent / 100})`;
+    progress.setAttribute("aria-valuenow", String(percent));
+    if (!tl.paused() && percent < 100) setPlayingLabel(true);
+  });
+
+  tl.eventCallback("onComplete", () => {
+    toggle.textContent = "Xem lại";
+  });
+
+  return { restart };
 }
 
 // ── Script Loader ────────────────────────────────────────────────
@@ -83,29 +176,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     rendered.push({ el, comp, section });
   });
 
-  // SweetAlert music prompt
-  const isDark = currentMode === "dark";
-  Swal.fire({
-    title: "Play music in the background?",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonColor: CONFIG.colors.accent || "#3085d6",
-    cancelButtonColor: "#888",
-    confirmButtonText: "Yes!",
-    cancelButtonText: "No",
-    background: isDark ? "#1e293b" : "#ffffff",
-    color: isDark ? "#f1f5f9" : "#1e293b",
-  }).then((result) => {
-    if (result.isConfirmed && audio) {
-      audio.play().catch(() => {});
-    }
+  createWelcomeScreen((withMusic) => {
+    if (withMusic && audio) audio.play().catch(() => {});
     buildTimeline(rendered);
   });
 });
 
 // ── Timeline Builder ─────────────────────────────────────────────
 function buildTimeline(rendered) {
-  const tl = gsap.timeline();
+  const tl = gsap.timeline({ paused: true });
 
   tl.to(".container", { duration: 0.6, visibility: "visible" });
 
@@ -142,7 +221,19 @@ function buildTimeline(rendered) {
 
   // Setup replay
   const replayBtn = document.getElementById("replay");
+  const controls = createPlaybackControls(tl);
   if (replayBtn) {
-    replayBtn.addEventListener("click", () => tl.restart());
+    replayBtn.addEventListener("click", controls.restart);
   }
+
+  const isMobile = window.matchMedia("(max-width: 600px)").matches;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReducedMotion) {
+    tl.timeScale(isMobile ? 4 : 3);
+  } else if (isMobile) {
+    // Keep the full story moving, while leaving enough time to read each line.
+    tl.timeScale(1.4);
+  }
+
+  tl.play();
 }

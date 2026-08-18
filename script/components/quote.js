@@ -8,8 +8,8 @@
       div.innerHTML = `
         <div class="quote-card">
           <span class="quote-mark">"</span>
-          <p class="quote-text">${section.text || "Every year is a gift."}</p>
-          ${section.author ? `<p class="quote-author">— ${section.author}</p>` : ""}
+          <p class="quote-text">${section.text || "Mỗi năm bên em đều là một món quà."}</p>
+          ${section.author ? `<p class="quote-author">${section.author}</p>` : ""}
         </div>
       `;
       container.appendChild(div);
@@ -21,6 +21,8 @@
       const mark = el.querySelector(".quote-mark");
       const text = el.querySelector(".quote-text");
       const author = el.querySelector(".quote-author");
+      const isMobile = window.matchMedia("(max-width: 600px)").matches;
+      const hold = isMobile ? 2.8 : 4;
 
       tl.from(card, { duration: 0.6, opacity: 0, scale: 0.9, y: 30 })
         .from(mark, { duration: 0.4, opacity: 0, scale: 3, rotation: -20 }, "-=0.2")
@@ -30,7 +32,7 @@
         tl.from(author, { duration: 0.4, opacity: 0, x: -20 });
       }
 
-      tl.to(card, { duration: 0.6, opacity: 0, y: -20 }, "+=4");
+      tl.to(card, { duration: 0.6, opacity: 0, y: -20 }, `+=${hold}`);
     },
   };
 })();

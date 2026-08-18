@@ -5,7 +5,7 @@
     render(container, section) {
       const div = document.createElement("div");
       div.className = "section section-announcement";
-      div.innerHTML = `<p>${section.text || "It's your birthday!!"}</p>`;
+      div.innerHTML = `<p>${section.text || "Hôm nay là sinh nhật em rồi!"}</p>`;
       container.appendChild(div);
       return div;
     },

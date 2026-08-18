@@ -17,6 +17,7 @@
 
 html, body {
   height: 100%;
+  min-height: 100%;
   overflow: hidden;
 }
 
@@ -24,6 +25,7 @@ body {
   font-family: 'Poppins', sans-serif;
   background: var(--bg);
   color: var(--text);
+  touch-action: manipulation;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.5s ease, color 0.5s ease;
@@ -63,7 +65,7 @@ body {
 /* ── Container ─────────────────────────────────────────────────── */
 .container {
   width: 100%;
-  height: 100vh;
+  min-height: 100dvh;
   height: 100dvh;
   overflow: hidden;
   position: relative;
@@ -81,9 +83,154 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem calc(4.25rem + env(safe-area-inset-bottom));
   pointer-events: none;
   overflow: hidden;
+}
+
+/* ── Welcome Screen ───────────────────────────────────────────── */
+#welcome-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(244, 114, 182, 0.16), transparent 34%),
+    var(--bg);
+}
+
+.welcome-card {
+  width: min(92vw, 420px);
+  padding: 2rem 1.25rem 1.35rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: rgba(128, 128, 128, 0.08);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.welcome-kicker {
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.welcome-card h2 {
+  margin-top: 0.55rem;
+  font-size: clamp(1.8rem, 8vw, 2.7rem);
+  line-height: 1.15;
+}
+
+.welcome-copy {
+  max-width: 30ch;
+  margin: 0.75rem auto 1.35rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  opacity: 0.72;
+}
+
+.welcome-actions {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.welcome-btn,
+.timeline-control,
+.replay-btn,
+.fake-btn {
+  min-height: 44px;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.welcome-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.welcome-btn:active,
+.timeline-control:active,
+.replay-btn:active,
+.fake-btn:active {
+  transform: scale(0.98);
+}
+
+.welcome-btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.welcome-btn-quiet {
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(128, 128, 128, 0.08);
+  color: var(--text);
+}
+
+/* ── Playback Controls ────────────────────────────────────────── */
+#playback-controls {
+  position: fixed;
+  left: 50%;
+  bottom: calc(0.65rem + env(safe-area-inset-bottom));
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: min(92vw, 440px);
+  padding: 0.4rem;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.72);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.timeline-control {
+  flex: 0 0 auto;
+  padding: 0.45rem 0.7rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.timeline-replay {
+  width: 42px;
+  padding-inline: 0;
+  color: var(--primary);
+  font-size: 1.15rem;
+}
+
+.timeline-progress {
+  position: relative;
+  flex: 1 1 auto;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.timeline-progress-fill {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  border-radius: inherit;
+  background: var(--primary);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -121,42 +268,168 @@ body {
 }
 
 /* ── Chatbox ───────────────────────────────────────────────────── */
+.section-chatbox {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(244, 114, 182, 0.09), transparent 36%),
+    radial-gradient(circle at 88% 72%, rgba(96, 165, 250, 0.08), transparent 28%);
+}
+
 .text-box {
-  border: 1.5px solid rgba(128, 128, 128, 0.12);
-  border-radius: 18px;
-  padding: 1.8rem;
-  max-width: 540px;
-  width: 88%;
   position: relative;
+  width: min(92vw, 620px);
+  max-width: 620px;
+  padding: 1rem 1.15rem 1.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
+    rgba(15, 23, 42, 0.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 24px 70px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   text-align: left;
-  background: rgba(128, 128, 128, 0.05);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+}
+
+.text-box::after {
+  position: absolute;
+  right: 1.15rem;
+  bottom: -0.4rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  content: "";
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(24, 32, 53, 0.95);
+  transform: rotate(45deg);
+}
+
+.chatbox-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.chatbox-avatar {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2.7rem;
+  height: 2.7rem;
+  overflow: hidden;
+  place-items: center;
+  border: 2px solid rgba(244, 114, 182, 0.5);
+  border-radius: 14px;
+  background: rgba(244, 114, 182, 0.15);
+  color: var(--primary);
+  font-size: 1.35rem;
+}
+
+.chatbox-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chatbox-meta {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+.chatbox-meta strong {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.chatbox-meta span {
+  color: var(--text);
+  font-size: 0.72rem;
+  opacity: 0.58;
+}
+
+.chatbox-heart {
+  margin-left: auto;
+  color: var(--primary);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.chatbox-divider {
+  height: 1px;
+  margin: 0.9rem 0 1rem;
+  background: linear-gradient(90deg, rgba(244, 114, 182, 0.35), rgba(255, 255, 255, 0.08), transparent);
 }
 
 .hbd-chatbox {
-  font-size: clamp(0.85rem, 2.2vw, 1rem);
-  line-height: 1.8;
+  position: relative;
+  padding: 0 0.1rem;
+  color: var(--text);
+  font-size: clamp(0.88rem, 2.2vw, 1.05rem);
+  line-height: 1.85;
   font-weight: 300;
   overflow-wrap: break-word;
   word-break: break-word;
+}
+
+.hbd-chatbox::before {
+  content: "\201C";
+  display: block;
+  height: 0.7rem;
+  color: var(--primary);
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 0.8;
+  opacity: 0.55;
 }
 
 .hbd-chatbox span {
   visibility: hidden;
 }
 
+.chatbox-signature {
+  margin-top: 0.9rem;
+  color: rgba(244, 114, 182, 0.82);
+  font-size: 0.76rem;
+  font-style: italic;
+  text-align: right;
+}
+
+.chatbox-signature span {
+  color: var(--primary);
+  font-style: normal;
+}
+
 .fake-btn {
-  background: var(--accent);
-  color: #fff;
-  border-radius: 10px;
-  padding: 0.5rem 1.4rem;
   position: absolute;
-  right: 14px;
-  bottom: -42px;
-  font-size: 0.85rem;
+  right: 1.15rem;
+  bottom: -2.9rem;
+  min-height: 44px;
+  padding: 0.58rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 12px 26px rgba(96, 165, 250, 0.24);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
+}
+
+.fake-btn::after {
+  content: "  →";
+  font-size: 1rem;
+}
+
+.section-chatbox .fake-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.section-chatbox .fake-btn:hover {
+  box-shadow: 0 15px 30px rgba(96, 165, 250, 0.3);
+  transform: translateY(-2px);
 }
 
 /* ── Ideas ──────────────────────────────────────────────────────── */
@@ -198,6 +471,212 @@ body {
   font-size: clamp(7rem, 22vw, 14rem);
   font-weight: 800;
   color: var(--primary);
+}
+
+/* ── Love Meme Story ─────────────────────────────────────────── */
+.section-meme-story {
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(244, 114, 182, 0.1), transparent 42%),
+    radial-gradient(circle at 12% 80%, rgba(96, 165, 250, 0.08), transparent 30%);
+}
+
+.meme-story-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(90vw, 560px);
+  height: min(74dvh, 680px);
+  margin-top: 0;
+}
+
+.meme-frame {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.meme-photo {
+  position: relative;
+  flex: 0 0 auto;
+  width: min(100%, 500px);
+  height: min(54dvh, 500px);
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  background: rgba(128, 128, 128, 0.08);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.meme-photo::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 23, 42, 0.2),
+    transparent 36%
+  );
+}
+
+.meme-story-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.meme-sticker {
+  position: absolute;
+  top: 1rem;
+  z-index: 2;
+  padding: 0.34rem 0.7rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #0f172a;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.2);
+  font-size: clamp(0.62rem, 1.7vw, 0.78rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.meme-sticker-me {
+  left: 1rem;
+  transform: rotate(-7deg);
+}
+
+.meme-sticker-you {
+  right: 1rem;
+  transform: rotate(7deg);
+  background: var(--primary);
+  color: #fff;
+}
+
+.meme-caption {
+  position: relative;
+  width: min(100%, 500px);
+  z-index: 2;
+  padding: 0.82rem 1rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.62);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-align: left;
+}
+
+.meme-caption::before {
+  display: block;
+  width: 2rem;
+  height: 3px;
+  margin-bottom: 0.58rem;
+  content: "";
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.meme-caption p {
+  color: #fff;
+  font-size: clamp(0.86rem, 2.35vw, 1.12rem);
+  font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.meme-caption p span {
+  display: inline-block;
+  color: #fda4af;
+}
+
+.meme-story-progress {
+  position: absolute;
+  bottom: calc(4.8rem + env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  gap: 0.35rem;
+  width: min(88vw, 420px);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.meme-progress-dot {
+  flex: 1 1 0;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.32);
+  opacity: 0.42;
+  transform: scale(1);
+}
+
+/* ── Memory Gallery ───────────────────────────────────────────── */
+.section-gallery {
+  z-index: 1;
+}
+
+.gallery-title {
+  color: var(--primary);
+  font-size: clamp(1.35rem, 4vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.gallery-subtitle {
+  max-width: 560px;
+  margin-top: 0.55rem;
+  font-size: clamp(0.85rem, 2.3vw, 1.05rem);
+  line-height: 1.6;
+  opacity: 0.7;
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  width: min(92vw, 650px);
+  margin-top: 1.3rem;
+}
+
+.memory-card {
+  margin: 0;
+  padding: 0.35rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(128, 128, 128, 0.08);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.memory-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.memory-card figcaption {
+  padding: 0.45rem 0.2rem 0.15rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  opacity: 0.68;
 }
 
 /* ── Countdown ─────────────────────────────────────────────────── */
@@ -373,7 +852,8 @@ body {
 }
 
 /* ── Closing ───────────────────────────────────────────────────── */
-.section-closing p {
+.section-closing .closing-text,
+.section-closing .replay-btn {
   font-size: clamp(1rem, 3.5vw, 1.8rem);
   font-weight: 300;
   line-height: 1.9;
@@ -381,9 +861,14 @@ body {
 }
 
 .replay-btn {
+  display: block;
+  width: auto;
+  max-width: min(90vw, 650px);
+  margin-top: 0.25rem;
   cursor: pointer;
   z-index: 3;
   pointer-events: none;
+  background: transparent;
   color: var(--accent) !important;
   font-weight: 500 !important;
   transition: opacity 0.3s ease;
@@ -406,24 +891,121 @@ body {
 /* ── Small mobile ──────────────────────────────────────────────── */
 @media screen and (max-width: 600px) {
   .section {
-    padding: 1.2rem 1rem;
+    padding: 1.2rem 1rem calc(4.5rem + env(safe-area-inset-bottom));
   }
 
   .text-box {
-    width: 94%;
-    padding: 1.2rem;
+    width: calc(100vw - 1.25rem);
+    padding: 0.9rem 0.9rem 1.2rem;
+    max-height: 60dvh;
+    overflow-y: auto;
+  }
+
+  .chatbox-avatar {
+    width: 2.45rem;
+    height: 2.45rem;
+    border-radius: 12px;
+  }
+
+  .chatbox-meta strong {
+    font-size: 0.84rem;
+  }
+
+  .chatbox-meta span {
+    font-size: 0.68rem;
+  }
+
+  .chatbox-divider {
+    margin: 0.75rem 0 0.85rem;
+  }
+
+  .hbd-chatbox {
+    font-size: 0.86rem;
+    line-height: 1.72;
+  }
+
+  .chatbox-signature {
+    margin-top: 0.72rem;
   }
 
   .fake-btn {
-    bottom: -36px;
-    right: 8px;
-    padding: 0.4rem 1rem;
+    right: 0.8rem;
+    bottom: -2.6rem;
+    padding: 0.46rem 1rem;
     font-size: 0.8rem;
   }
 
   .quote-card {
     width: 92%;
     padding: 1.5rem;
+  }
+
+  .memory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    width: 94vw;
+    margin-top: 1rem;
+  }
+
+  .memory-card {
+    padding: 0.25rem;
+    border-radius: 13px;
+  }
+
+  .memory-card img {
+    border-radius: 10px;
+  }
+
+  .meme-story-stage {
+    width: calc(100vw - 1.25rem);
+    height: 65dvh;
+    margin-top: 0;
+  }
+
+  .meme-photo {
+    width: 100%;
+    height: min(43dvh, 370px);
+    border-radius: 19px;
+  }
+
+  .meme-sticker {
+    top: 0.75rem;
+    padding: 0.32rem 0.58rem;
+    font-size: 0.6rem;
+  }
+
+  .meme-sticker-me {
+    left: 0.75rem;
+  }
+
+  .meme-sticker-you {
+    right: 0.75rem;
+  }
+
+  .meme-caption {
+    width: 100%;
+    padding: 0.68rem 0.72rem 0.74rem;
+    border-radius: 14px;
+  }
+
+  .meme-caption::before {
+    width: 1.6rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .meme-caption p {
+    font-size: clamp(0.82rem, 3.55vw, 1rem);
+    line-height: 1.45;
+  }
+
+  .meme-story-progress {
+    bottom: calc(4.95rem + env(safe-area-inset-bottom));
+    width: calc(100vw - 2rem);
+    gap: 0.25rem;
+  }
+
+  .meme-progress-dot {
+    height: 3px;
   }
 
   #theme-toggle {
@@ -434,8 +1016,27 @@ body {
     right: 0.75rem;
   }
 
+  #playback-controls {
+    width: calc(100vw - 1rem);
+    bottom: calc(0.45rem + env(safe-area-inset-bottom));
+  }
+
+  .timeline-control {
+    min-width: 44px;
+    padding-inline: 0.55rem;
+  }
+
+  .section-closing .closing-text,
+  .section-closing .replay-btn {
+    max-width: 34ch;
+    font-size: clamp(0.95rem, 4vw, 1.25rem);
+    line-height: 1.65;
+  }
+
   .wish-hbd {
     letter-spacing: 1px;
+    max-width: 92vw;
+    line-height: 1.25;
   }
 }
 
@@ -472,6 +1073,41 @@ body {
 
   .section-announcement p {
     font-size: clamp(1.4rem, 5vw, 2.2rem);
+  }
+
+  .meme-story-stage {
+    width: min(74vw, 520px);
+    height: 84dvh;
+    margin-top: 0;
+  }
+
+  .meme-photo {
+    height: min(50dvh, 300px);
+    border-radius: 18px;
+  }
+
+  .meme-caption {
+    width: 100%;
+    padding: 0.5rem 0.6rem 0.56rem;
+  }
+
+  .meme-caption p {
+    font-size: clamp(0.72rem, 2.4vw, 0.95rem);
+  }
+
+  .meme-story-progress {
+    bottom: calc(3.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

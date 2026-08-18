@@ -14,7 +14,7 @@
       for (let i = 0; i < count; i++) {
         const img = document.createElement("img");
         img.src = `img/${SVGS[i % SVGS.length]}`;
-        img.alt = "balloon";
+        img.alt = "Bóng bay";
         div.appendChild(img);
       }
 
@@ -24,10 +24,16 @@
 
     animate(tl, el) {
       const imgs = el.querySelectorAll("img");
+      const isMobile = window.matchMedia("(max-width: 600px)").matches;
       tl.fromTo(
         imgs,
         { opacity: 0.9, y: 1400 },
-        { opacity: 1, y: -1000, duration: 2.5, stagger: 0.2 }
+        {
+          opacity: 1,
+          y: -1000,
+          duration: isMobile ? 1.8 : 2.5,
+          stagger: isMobile ? 0.1 : 0.2,
+        }
       );
     },
   };

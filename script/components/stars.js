@@ -25,12 +25,14 @@
     },
 
     animate(tl, el) {
+      const isMobile = window.matchMedia("(max-width: 600px)").matches;
+      const hold = isMobile ? 3 : 4;
       tl.fromTo(
         el,
         { opacity: 0 },
         { opacity: 1, duration: 1 }
       )
-      .to(el, { opacity: 0, duration: 1 }, "+=4");
+      .to(el, { opacity: 0, duration: 1 }, `+=${hold}`);
     },
   };
 })();

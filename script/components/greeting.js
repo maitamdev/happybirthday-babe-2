@@ -7,7 +7,7 @@
       div.className = "section section-greeting";
       div.innerHTML = `
         <h1 class="greeting-title">
-          ${section.title || "Hi"}
+          ${section.title || "Chào"}
           <span class="greeting-name">${config.name}</span>
         </h1>
         <p class="greeting-subtitle">${section.subtitle || ""}</p>

@@ -7,12 +7,12 @@
       div.className = "section section-closing";
       div.innerHTML = `
         <p class="closing-text">${
-          section.text || "Okay, now come back and tell me if you liked it."
+          section.text || "Cảm ơn em đã xem món quà nhỏ này của anh."
         }</p>
-        <p class="replay-btn" id="replay">${
-          section.replayText || "Or click, if you want to watch it again."
-        }</p>
-        <p class="last-smile">:)</p>
+        <button type="button" class="replay-btn" id="replay">${
+          section.replayText || "Nhấn vào đây nếu em muốn xem lại."
+        }</button>
+        <p class="last-smile">❤️</p>
       `;
       container.appendChild(div);
       return div;
@@ -20,7 +20,7 @@
 
     animate(tl, el) {
       const ideaIn = { opacity: 0, y: -20, rotationX: 5, skewX: "15deg" };
-      tl.from(el.querySelectorAll("p"), {
+      tl.from(el.querySelectorAll(".closing-text, #replay, .last-smile"), {
         duration: 1, ...ideaIn, stagger: 1.2,
       })
       // Enable replay button only after it becomes visible

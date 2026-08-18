@@ -38,6 +38,12 @@
       const regularLines = el.querySelectorAll(".idea-line:not(.idea-special)");
       const specialLine = el.querySelector(".idea-special");
       const bigLetters = el.querySelectorAll(".idea-big-letters span");
+      const isMobile = window.matchMedia("(max-width: 600px)").matches;
+      const lineHold = isMobile ? 1.45 : 2.5;
+      const specialHold = isMobile ? 0.8 : 1.5;
+      const specialSpanHold = isMobile ? 0.8 : 1.4;
+      const specialExitHold = isMobile ? 1.2 : 2;
+      const bigLettersHold = isMobile ? 1 : 1.5;
 
       // Regular lines: enter → wait → leave
       regularLines.forEach((line) => {
@@ -51,7 +57,7 @@
           });
         }
 
-        tl.to(line, { duration: 0.7, ...LEAVE }, "+=2.5");
+        tl.to(line, { duration: 0.7, ...LEAVE }, `+=${lineHold}`);
       });
 
       // Special last line: dramatic entrance
@@ -59,17 +65,17 @@
         tl.fromTo(specialLine,
           { rotationX: 15, rotationZ: -10, skewY: "-5deg", y: 50, z: 10, opacity: 0 },
           { rotationX: 0, rotationZ: 0, skewY: "0deg", y: 0, z: 0, opacity: 1, duration: 0.7 },
-          "+=1.5"
+          `+=${specialHold}`
         );
 
         const span = specialLine.querySelector("span");
         if (span) {
-          tl.to(span, { duration: 0.7, rotation: 90, x: 8 }, "+=1.4");
+          tl.to(span, { duration: 0.7, rotation: 90, x: 8 }, `+=${specialSpanHold}`);
         }
 
         tl.to(specialLine, {
           duration: 0.7, scale: 0.2, opacity: 0,
-        }, "+=2");
+        }, `+=${specialExitHold}`);
       }
 
       // Big letters: stagger in then out
@@ -81,7 +87,7 @@
         .to(bigLetters, {
           duration: 0.8, scale: 3, opacity: 0, rotation: -15,
           ease: "expo.out", stagger: 0.2,
-        }, "+=1.5");
+        }, `+=${bigLettersHold}`);
       }
     },
   };

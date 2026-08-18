@@ -9,6 +9,8 @@
  *   "announcement"  → Birthday announcement text
  *   "chatbox"       → Chat message with typing animation
  *   "ideas"         → Sequential text reveals, one by one
+ *   "memeStory"     → One love/meme photo paired with each sentence
+ *   "gallery"       → Memory photo gallery
  *   "quote"         → Styled quote card with optional author
  *   "countdown"     → Animated 3-2-1 countdown
  *   "stars"         → Twinkling stars background
@@ -27,8 +29,8 @@
 
 const CONFIG = {
   // ── Recipient Info ────────────────────────────────────────────
-  name: "Irene",
-  photo: "./img/irene.jpg",       // Place your photo in the img/ folder
+  name: "Emmbe",
+  photo: "./img/emmbe-02.jpg",     // Ảnh chân dung chính của Emmbe
   music: "./music/hbd.mpeg",      // Place your music in the music/ folder
 
   // ── Theme Colors ──────────────────────────────────────────────
@@ -55,39 +57,92 @@ const CONFIG = {
   sections: [
     {
       type: "greeting",
-      title: "Hi",
-      subtitle: "I really like your name btw!",
+      title: "Gửi",
+      subtitle: "Emmmbe iu của anhiu",
     },
     {
       type: "countdown",
       from: 3,                    // Countdown from this number
-      goText: "🎉",              // Text shown after countdown ends
+      goText: "🎂",              // Text shown after countdown ends
     },
     {
       type: "announcement",
-      text: "It's your birthday!! :D",
+      text: "emmbe của aiuu đã tròn 21 ùi :3",
     },
     {
       type: "chatbox",
       message:
-        "Happy birthday to youu!! Wishing you a wonderful year ahead filled with joy, love, and endless happiness!",
-      buttonText: "Send",
+        "Chúc mừng sinh nhật emmmbe iu! Hôm nay là tròn 21 năm ngày một thiên thần nhỏ ra đời. Cảm ơn trời vì đã mang đến thế gian một cô công chúa bé nhỏ cho anh. Hôm nay là sinh nhật của người anh yêu thương nhất.",
+      buttonText: "Gửi em ❤️",
     },
     {
-      type: "ideas",
-      lines: [
-        "That's what I was going to do.",
-        "But then I stopped.",
-        "I realised, I wanted to do something <strong>special</strong>.",
-        "Because,",
-        "You are Special <span>:)</span>",
+      type: "memeStory",
+      items: [
+        {
+          src: "./img/memes/meme-01-cuddle.jpg",
+          alt: "Chú mèo ngậm một bông hoa hồng",
+          text: "Anh muốn chúc em luôn xinh đẹp, vui vẻ, hạnh phúc với những điều mình đã chọn.",
+        },
+        {
+          src: "./img/memes/meme-02-surprised.jpg",
+          alt: "Chú mèo trắng đang đưa chân lên mặt",
+          text: "Luôn nở nụ cười tươi trên môi dù trong bất kì hoàn cảnh khó khăn nào.",
+        },
+        {
+          src: "./img/memes/meme-03-cats-hugging.jpg",
+          alt: "Hai chú mèo vàng đang ôm nhau",
+          text: "Hãy luôn nhớ rằng anhiu luôn đứng sau bảo vệ, chở che, chăm sóc emmbe 😘",
+        },
+        {
+          src: "./img/memes/meme-04-sleeping-cat.jpg",
+          alt: "Hai chú mèo đang ngủ cạnh nhau",
+          text: "Chúng ta đã cùng nhau trên hành trình hơn hai năm ở bên nhauu.",
+        },
+        {
+          src: "./img/memes/meme-05-kittens-close.jpg",
+          alt: "Chú mèo đang rưng rưng nước mắt",
+          text: "Anh biết rằng bản thân anh còn nhiều điều chưa tốt.",
+        },
+        {
+          src: "./img/memes/meme-06-warm-cuddle.jpg",
+          alt: "Hai chú mèo mặc đồ cưới đứng cạnh nhau",
+          text: "anhiu sẽ cố gắng để cả hai ta cùng tiến xa hơn trên chặng đường sắp tới.",
+        },
+        {
+          src: "./img/memes/meme-07-nuzzle.jpg",
+          alt: "Nhân vật màu hồng đi giữa con đường loang màu",
+          text: "Cảm ơn emmmbe vì đã bước vào cuộc đời của anh.",
+        },
+        {
+          src: "./img/memes/meme-08-love.gif",
+          alt: "Dudu hôn Bubu với những trái tim xung quanh",
+          text: "Anhh iu emmmbe nhìu nhắmmmm <span>❤️</span>",
+        },
       ],
-      bigLetters: "SO",
+    },
+    {
+      type: "gallery",
+      title: "Những khoảnh khắc của chúng ta",
+      subtitle: "Chúng ta đã cùng nhau trên hành trình hơn hai năm ở bên nhauu.",
+      images: [
+        {
+          src: "./img/emmbe-01.jpg",
+          alt: "Emmbe và anhiu bên nhau",
+        },
+        {
+          src: "./img/emmbe-03.jpg",
+          alt: "Một khoảnh khắc của Emmbe",
+        },
+        {
+          src: "./img/emmbe-04.jpg",
+          alt: "Emmbe và anhiu",
+        },
+      ],
     },
     {
       type: "quote",
-      text: "The more you praise and celebrate your life, the more there is in life to celebrate.",
-      author: "Oprah Winfrey",
+      text: "Nhà của anh không phải là một nơi, mà là nơi có em.",
+      author: "Anhiu",
     },
     {
       type: "stars",
@@ -99,21 +154,8 @@ const CONFIG = {
     },
     {
       type: "profile",
-      wishTitle: "Happy Birthday!",
-      wishText: "May the js.prototypes always be with you! ;)",
-    },
-    {
-      type: "fireworks",
-      count: 24,
-    },
-    {
-      type: "confetti",
-      count: 9,
-    },
-    {
-      type: "closing",
-      text: "Okay, now come back and tell me if you liked it.",
-      replayText: "Or click, if you want to watch it again.",
+      wishTitle: "Chúc mừng sinh nhật em yêu ❤️",
+      wishText: "Cảm ơn em vì đã khiến những ngày bình thường của anh trở nên đặc biệt hơn.",
     },
   ],
 };
